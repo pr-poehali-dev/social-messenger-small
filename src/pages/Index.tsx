@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ChatWindow from '@/components/ChatWindow';
+import Auth from '@/components/Auth';
 
 interface Chat {
   id: number;
@@ -27,11 +28,40 @@ interface StoreItem {
   exclusive: boolean;
 }
 
+interface UserData {
+  firstName: string;
+  lastName: string;
+  username: string;
+  bio: string;
+  avatar: string;
+  password: string;
+}
+
 export default function Index() {
   const [activeTab, setActiveTab] = useState('chats');
   const [diamonds, setDiamonds] = useState(150);
   const [hasPlusSubscription, setHasPlusSubscription] = useState(false);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [user, setUser] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('tunzok_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  const handleLogin = (userData: UserData) => {
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
+
+  if (!user) {
+    return <Auth onLogin={handleLogin} />;
+  }
 
   const chats: Chat[] = [
     { id: 1, name: 'Анна Смирнова', lastMessage: 'Встречаемся завтра?', time: '14:32', unread: 2, avatar: 'АС' },
@@ -70,12 +100,21 @@ export default function Index() {
       <div className="max-w-7xl mx-auto p-4 md:p-6">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#2AABEE] rounded-xl flex items-center justify-center shadow-md">
               <Icon name="MessageCircle" size={24} className="text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-900">MAY Messenger</h1>
+            <h1 className="text-2xl font-bold text-slate-900">Tunzok</h1>
           </div>
           <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="text-slate-600 hover:text-red-600"
+              title="Выйти"
+            >
+              <Icon name="LogOut" size={20} />
+            </Button>
             <div className="flex items-center gap-2 bg-gradient-to-r from-purple-100 to-blue-100 px-4 py-2 rounded-full">
               <span className="text-2xl">💎</span>
               <span className="font-semibold text-slate-900">{diamonds}</span>
@@ -89,20 +128,20 @@ export default function Index() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full bg-white/80 backdrop-blur-sm border border-slate-200 mb-6 p-1 h-auto">
-            <TabsTrigger value="chats" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white">
+          <TabsList className="w-full bg-white border-0 shadow-sm mb-6 p-1 h-auto">
+            <TabsTrigger value="chats" className="flex-1 data-[state=active]:bg-[#2AABEE] data-[state=active]:text-white rounded-lg">
               <Icon name="MessageSquare" size={18} className="mr-2" />
               Чаты
             </TabsTrigger>
-            <TabsTrigger value="contacts" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white">
+            <TabsTrigger value="contacts" className="flex-1 data-[state=active]:bg-[#2AABEE] data-[state=active]:text-white rounded-lg">
               <Icon name="Users" size={18} className="mr-2" />
               Контакты
             </TabsTrigger>
-            <TabsTrigger value="store" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white">
+            <TabsTrigger value="store" className="flex-1 data-[state=active]:bg-[#2AABEE] data-[state=active]:text-white rounded-lg">
               <Icon name="Store" size={18} className="mr-2" />
               Магазин
             </TabsTrigger>
-            <TabsTrigger value="profile" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-600 data-[state=active]:text-white">
+            <TabsTrigger value="profile" className="flex-1 data-[state=active]:bg-[#2AABEE] data-[state=active]:text-white rounded-lg">
               <Icon name="User" size={18} className="mr-2" />
               Профиль
             </TabsTrigger>

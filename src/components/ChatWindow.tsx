@@ -100,17 +100,17 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
 
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col">
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 flex items-center gap-3 shadow-lg">
+      <div className="bg-[#2AABEE] text-white p-4 flex items-center gap-3 shadow-md">
         <Button
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className="text-white hover:bg-white/20"
+          className="text-white hover:bg-white/10"
         >
           <Icon name="ArrowLeft" size={24} />
         </Button>
         <Avatar className="w-10 h-10">
-          <AvatarFallback className="bg-white/20 text-white font-semibold">
+          <AvatarFallback className="bg-white/30 text-white font-semibold">
             {chatAvatar}
           </AvatarFallback>
         </Avatar>
@@ -121,14 +121,14 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
         <Button
           variant="ghost"
           size="icon"
-          className="text-white hover:bg-white/20"
+          className="text-white hover:bg-white/10"
         >
           <Icon name="Phone" size={20} />
         </Button>
         <Button
           variant="ghost"
           size="icon"
-          className="text-white hover:bg-white/20"
+          className="text-white hover:bg-white/10"
         >
           <Icon name="Video" size={20} />
         </Button>
@@ -143,7 +143,7 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
             >
               {message.sender === 'other' && (
                 <Avatar className="w-8 h-8 flex-shrink-0">
-                  <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white text-xs">
+                  <AvatarFallback className="bg-[#2AABEE] text-white text-xs">
                     {chatAvatar}
                   </AvatarFallback>
                 </Avatar>
@@ -151,10 +151,10 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
               
               <div className={`flex flex-col ${message.sender === 'me' ? 'items-end' : 'items-start'} max-w-[70%]`}>
                 <Card
-                  className={`p-3 ${
+                  className={`p-3 rounded-2xl ${
                     message.sender === 'me'
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0'
-                      : 'bg-white border-slate-200'
+                      ? 'bg-[#2AABEE] text-white border-0'
+                      : 'bg-[#f0f0f0] border-0 text-slate-900'
                   } ${message.text.length <= 3 ? 'text-4xl p-2' : ''}`}
                 >
                   <p className={message.text.length <= 3 ? 'text-center' : ''}>{message.text}</p>
@@ -216,7 +216,7 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
             variant="outline"
             size="icon"
             onClick={() => setShowStickers(!showStickers)}
-            className={`flex-shrink-0 ${showStickers ? 'bg-purple-100 border-purple-300' : ''}`}
+            className={`flex-shrink-0 ${showStickers ? 'bg-slate-100' : ''}`}
           >
             <Icon name="Smile" size={20} />
           </Button>
@@ -241,7 +241,7 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
           <Button
             size="icon"
             onClick={handleSendMessage}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 flex-shrink-0"
+            className="bg-[#2AABEE] hover:bg-[#229ED9] text-white border-0 flex-shrink-0"
           >
             <Icon name="Send" size={20} />
           </Button>
