@@ -21,6 +21,8 @@ interface Chat {
   unread: number;
   avatar: string;
   type?: 'chat' | 'group' | 'channel';
+  description?: string;
+  isBot?: boolean;
 }
 
 interface UserData {
@@ -51,6 +53,24 @@ export default function Index() {
       setGroups(JSON.parse(savedGroups));
     }
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      const hasGreeted = localStorage.getItem(`maybot_greeted_${user.username}`);
+      if (!hasGreeted) {
+        setSelectedChat({
+          id: 0,
+          name: 'МайБот',
+          lastMessage: 'Добро пожаловать!',
+          time: 'Сейчас',
+          unread: 0,
+          avatar: '🤖',
+          type: 'chat',
+          isBot: true,
+        });
+      }
+    }
+  }, [user]);
 
   const handleLogin = (userData: UserData) => {
     setUser(userData);
@@ -89,7 +109,20 @@ export default function Index() {
     return <Auth onLogin={handleLogin} />;
   }
 
+  const maybotChat: Chat = {
+    id: 0,
+    name: 'МайБот',
+    lastMessage: 'Я ваш помощник в мессенджере',
+    time: '',
+    unread: 0,
+    avatar: '🤖',
+    type: 'chat',
+    description: 'Официальный бот Tunzok. Помогаю новым пользователям и отвечаю на вопросы.',
+    isBot: true,
+  };
+
   const chats: Chat[] = [
+    maybotChat,
     { id: 1, name: 'Анна Смирнова', lastMessage: 'Встречаемся завтра?', time: '14:32', unread: 2, avatar: 'АС', type: 'chat' },
     { id: 2, name: 'Команда разработки', lastMessage: 'Отправил новые макеты', time: '12:15', unread: 0, avatar: 'КР', type: 'chat' },
     { id: 3, name: 'Мама', lastMessage: 'Не забудь позвонить!', time: 'Вчера', unread: 1, avatar: 'М', type: 'chat' },
@@ -104,6 +137,8 @@ export default function Index() {
       <ChatWindow
         chatName={selectedChat.name}
         chatAvatar={selectedChat.avatar}
+        chatId={selectedChat.id}
+        chatType={selectedChat.type}
         onClose={() => setSelectedChat(null)}
       />
     );
@@ -186,7 +221,7 @@ export default function Index() {
                   >
                     <div className="flex items-center gap-4">
                       <Avatar className="w-12 h-12">
-                        <AvatarFallback className="bg-purple-600/20 text-purple-400 font-semibold">
+                        <AvatarFallback className={chat.isBot ? 'bg-blue-600/20 text-blue-400 font-semibold text-xl' : 'bg-purple-600/20 text-purple-400 font-semibold'}>
                           {chat.avatar}
                         </AvatarFallback>
                       </Avatar>
@@ -194,6 +229,12 @@ export default function Index() {
                         <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-2">
                             <h3 className="font-semibold text-white truncate">{chat.name}</h3>
+                            {chat.isBot && (
+                              <Badge className="bg-blue-600/20 text-blue-400 border-blue-500/30 text-xs">
+                                <Icon name="Bot" size={10} className="mr-1" />
+                                Бот
+                              </Badge>
+                            )}
                             {chat.type === 'group' && (
                               <Badge className="bg-purple-600/20 text-purple-400 border-purple-500/30 text-xs">
                                 <Icon name="Users" size={10} className="mr-1" />
@@ -235,8 +276,8 @@ export default function Index() {
             </div>
             <ScrollArea className="h-[600px]">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {chats.filter(c => c.type === 'chat').map((contact) => (
-                  <Card key={contact.id} className="p-6 text-center hover:bg-[#2e2e3e] transition-all bg-[#1e1e2e] border-[#2e2e3e]">
+                {chats.filter(c => c.type === 'chat' && !c.isBot).map((contact) => (
+                  <Card key={contact.id} className="p-6 text-center hover:bg-[#2e2e3e] transition-all cursor-pointer bg-[#1e1e2e] border-[#2e2e3e]" onClick={() => setSelectedChat(contact)}>
                     <Avatar className="w-16 h-16 mx-auto mb-3">
                       <AvatarFallback className="bg-purple-600/20 text-purple-400 text-xl font-semibold">
                         {contact.avatar}

@@ -10,6 +10,7 @@ interface Message {
   id: number;
   text: string;
   sender: 'me' | 'other';
+  senderName?: string;
   time: string;
   reactions?: string[];
 }
@@ -17,15 +18,13 @@ interface Message {
 interface ChatWindowProps {
   chatName: string;
   chatAvatar: string;
+  chatId: number;
+  chatType?: 'chat' | 'group' | 'channel';
   onClose: () => void;
 }
 
-export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindowProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: 'Привет! Как дела?', sender: 'other', time: '14:30' },
-    { id: 2, text: 'Привет! Всё отлично, спасибо!', sender: 'me', time: '14:31' },
-    { id: 3, text: 'Встречаемся завтра?', sender: 'other', time: '14:32', reactions: ['👍', '❤️'] },
-  ]);
+export default function ChatWindow({ chatName, chatAvatar, chatId, chatType = 'chat', onClose }: ChatWindowProps) {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [showStickers, setShowStickers] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -33,59 +32,106 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
   const stickers = ['😀', '😂', '❤️', '👍', '🎉', '🔥', '😎', '🤔', '👏', '🎂', '🎁', '⭐'];
 
   useEffect(() => {
+    const savedMessages = localStorage.getItem(`tunzok_messages_${chatId}`);
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    } else {
+      const currentUser = localStorage.getItem('tunzok_user');
+      if (currentUser) {
+        const user = JSON.parse(currentUser);
+        const hasGreeted = localStorage.getItem(`maybot_greeted_${user.username}`);
+        
+        if (!hasGreeted && chatId === 0) {
+          const now = new Date();
+          const greetMessage: Message = {
+            id: 1,
+            text: `Добро пожаловать в наш мессенджер, ${user.firstName}! Если появятся вопросы, обращайтесь ко мне.`,
+            sender: 'other',
+            senderName: 'МайБот',
+            time: `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`,
+          };
+          setMessages([greetMessage]);
+          localStorage.setItem(`tunzok_messages_${chatId}`, JSON.stringify([greetMessage]));
+          localStorage.setItem(`maybot_greeted_${user.username}`, 'true');
+        }
+      }
+    }
+  }, [chatId]);
+
+  useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
+  const saveMessages = (msgs: Message[]) => {
+    localStorage.setItem(`tunzok_messages_${chatId}`, JSON.stringify(msgs));
+    setMessages(msgs);
+  };
+
   const handleSendMessage = () => {
     if (newMessage.trim()) {
       const now = new Date();
       const timeStr = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+      const currentUser = localStorage.getItem('tunzok_user');
+      const user = currentUser ? JSON.parse(currentUser) : null;
       
-      setMessages([...messages, {
-        id: messages.length + 1,
+      const newMsg: Message = {
+        id: Date.now(),
         text: newMessage,
         sender: 'me',
+        senderName: user ? `${user.firstName} ${user.lastName}` : 'Вы',
         time: timeStr,
-      }]);
+      };
+      
+      const updatedMessages = [...messages, newMsg];
+      saveMessages(updatedMessages);
       setNewMessage('');
       setShowStickers(false);
 
-      setTimeout(() => {
-        const responses = [
-          'Отлично!',
-          'Согласен',
-          'Понял тебя',
-          'Хорошая идея!',
-          'Давай так и сделаем',
-        ];
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-        setMessages(prev => [...prev, {
-          id: prev.length + 1,
-          text: randomResponse,
-          sender: 'other',
-          time: `${now.getHours()}:${(now.getMinutes() + 1).toString().padStart(2, '0')}`,
-        }]);
-      }, 1500);
+      if (chatType !== 'channel' && chatId === 0) {
+        setTimeout(() => {
+          const responses = [
+            'Я всегда на связи! Чем могу помочь?',
+            'Хорошо, отвечу на любые вопросы.',
+            'Понял вас! Что еще вас интересует?',
+            'Рад помочь! Задавайте вопросы.',
+            'С удовольствием помогу!',
+          ];
+          const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+          const botReply: Message = {
+            id: Date.now() + 1,
+            text: randomResponse,
+            sender: 'other',
+            senderName: 'МайБот',
+            time: `${now.getHours()}:${(now.getMinutes() + 1).toString().padStart(2, '0')}`,
+          };
+          saveMessages([...updatedMessages, botReply]);
+        }, 1500);
+      }
     }
   };
 
   const handleSendSticker = (sticker: string) => {
     const now = new Date();
     const timeStr = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const currentUser = localStorage.getItem('tunzok_user');
+    const user = currentUser ? JSON.parse(currentUser) : null;
     
-    setMessages([...messages, {
-      id: messages.length + 1,
+    const stickerMsg: Message = {
+      id: Date.now(),
       text: sticker,
       sender: 'me',
+      senderName: user ? `${user.firstName} ${user.lastName}` : 'Вы',
       time: timeStr,
-    }]);
+    };
+    
+    saveMessages([...messages, stickerMsg]);
     setShowStickers(false);
   };
 
   const handleReaction = (messageId: number, emoji: string) => {
-    setMessages(messages.map(msg => {
+    const updatedMessages = messages.map(msg => {
       if (msg.id === messageId) {
         const reactions = msg.reactions || [];
         if (reactions.includes(emoji)) {
@@ -95,7 +141,8 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
         }
       }
       return msg;
-    }));
+    });
+    saveMessages(updatedMessages);
   };
 
   return (
@@ -116,7 +163,9 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
         </Avatar>
         <div className="flex-1">
           <h2 className="font-semibold">{chatName}</h2>
-          <p className="text-xs text-slate-400">в сети</p>
+          <p className="text-xs text-slate-400">
+            {chatType === 'group' ? 'группа' : chatType === 'channel' ? 'канал' : 'в сети'}
+          </p>
         </div>
         <Button
           variant="ghost"
@@ -144,12 +193,17 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
               {message.sender === 'other' && (
                 <Avatar className="w-8 h-8 flex-shrink-0">
                   <AvatarFallback className="bg-purple-600/20 text-purple-400 text-xs">
-                    {chatAvatar}
+                    {message.senderName ? message.senderName.substring(0, 2).toUpperCase() : chatAvatar}
                   </AvatarFallback>
                 </Avatar>
               )}
               
               <div className={`flex flex-col ${message.sender === 'me' ? 'items-end' : 'items-start'} max-w-[70%]`}>
+                {message.sender === 'other' && message.senderName && (chatType === 'group' || chatType === 'channel') && (
+                  <span className="text-xs text-purple-400 font-medium mb-1 px-1">
+                    {message.senderName}
+                  </span>
+                )}
                 <Card
                   className={`p-3 rounded-2xl ${
                     message.sender === 'me'
@@ -226,8 +280,9 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder="Сообщение..."
+              placeholder={chatType === 'channel' ? 'Написать пост...' : 'Сообщение...'}
               className="pr-10 bg-[#2e2e3e] border-[#3e3e4e] text-white placeholder:text-slate-500"
+              disabled={chatType === 'channel'}
             />
             <Button
               variant="ghost"
