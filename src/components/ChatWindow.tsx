@@ -99,8 +99,8 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
   };
 
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col">
-      <div className="bg-[#2AABEE] text-white p-4 flex items-center gap-3 shadow-md">
+    <div className="fixed inset-0 bg-[#0e1621] z-50 flex flex-col">
+      <div className="bg-[#1e1e2e] text-white p-4 flex items-center gap-3 shadow-md border-b border-[#2e2e3e]">
         <Button
           variant="ghost"
           size="icon"
@@ -110,13 +110,13 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
           <Icon name="ArrowLeft" size={24} />
         </Button>
         <Avatar className="w-10 h-10">
-          <AvatarFallback className="bg-white/30 text-white font-semibold">
+          <AvatarFallback className="bg-purple-600/20 text-purple-400 font-semibold">
             {chatAvatar}
           </AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <h2 className="font-semibold">{chatName}</h2>
-          <p className="text-xs text-white/80">в сети</p>
+          <p className="text-xs text-slate-400">в сети</p>
         </div>
         <Button
           variant="ghost"
@@ -143,7 +143,7 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
             >
               {message.sender === 'other' && (
                 <Avatar className="w-8 h-8 flex-shrink-0">
-                  <AvatarFallback className="bg-[#2AABEE] text-white text-xs">
+                  <AvatarFallback className="bg-purple-600/20 text-purple-400 text-xs">
                     {chatAvatar}
                   </AvatarFallback>
                 </Avatar>
@@ -153,15 +153,15 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
                 <Card
                   className={`p-3 rounded-2xl ${
                     message.sender === 'me'
-                      ? 'bg-[#2AABEE] text-white border-0'
-                      : 'bg-[#f0f0f0] border-0 text-slate-900'
+                      ? 'bg-purple-600 text-white border-0'
+                      : 'bg-[#1e1e2e] border border-[#2e2e3e] text-white'
                   } ${message.text.length <= 3 ? 'text-4xl p-2' : ''}`}
                 >
                   <p className={message.text.length <= 3 ? 'text-center' : ''}>{message.text}</p>
                 </Card>
                 
                 <div className="flex items-center gap-2 mt-1 px-1">
-                  <span className={`text-xs ${message.sender === 'me' ? 'text-slate-500' : 'text-slate-500'}`}>
+                  <span className="text-xs text-slate-500">
                     {message.time}
                   </span>
                   
@@ -170,7 +170,7 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
                       {message.reactions.map((reaction, idx) => (
                         <span
                           key={idx}
-                          className="text-sm bg-slate-100 rounded-full px-2 py-0.5 cursor-pointer hover:bg-slate-200 transition-colors"
+                          className="text-sm bg-[#2e2e3e] rounded-full px-2 py-0.5 cursor-pointer hover:bg-[#3e3e4e] transition-colors"
                           onClick={() => handleReaction(message.id, reaction)}
                         >
                           {reaction}
@@ -185,7 +185,7 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
                     className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6"
                     onClick={() => handleReaction(message.id, '❤️')}
                   >
-                    <Icon name="Heart" size={14} className="text-slate-400" />
+                    <Icon name="Heart" size={14} className="text-slate-500" />
                   </Button>
                 </div>
               </div>
@@ -195,13 +195,13 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
       </ScrollArea>
 
       {showStickers && (
-        <div className="p-4 border-t border-slate-200 bg-white animate-fade-in">
+        <div className="p-4 border-t border-[#2e2e3e] bg-[#1e1e2e] animate-fade-in">
           <div className="grid grid-cols-6 gap-2 max-w-4xl mx-auto">
             {stickers.map((sticker, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSendSticker(sticker)}
-                className="text-4xl p-3 hover:bg-slate-100 rounded-lg transition-colors hover-scale"
+                className="text-4xl p-3 hover:bg-[#2e2e3e] rounded-lg transition-colors hover-scale"
               >
                 {sticker}
               </button>
@@ -210,13 +210,13 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
         </div>
       )}
 
-      <div className="p-4 border-t border-slate-200 bg-white">
+      <div className="p-4 border-t border-[#2e2e3e] bg-[#1e1e2e]">
         <div className="flex items-center gap-2 max-w-4xl mx-auto">
           <Button
             variant="outline"
             size="icon"
             onClick={() => setShowStickers(!showStickers)}
-            className={`flex-shrink-0 ${showStickers ? 'bg-slate-100' : ''}`}
+            className={`flex-shrink-0 bg-[#2e2e3e] hover:bg-[#3e3e4e] text-slate-400 ${showStickers ? 'bg-purple-600/20 text-purple-400' : ''}`}
           >
             <Icon name="Smile" size={20} />
           </Button>
@@ -227,21 +227,21 @@ export default function ChatWindow({ chatName, chatAvatar, onClose }: ChatWindow
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
               placeholder="Сообщение..."
-              className="pr-10"
+              className="pr-10 bg-[#2e2e3e] border-[#3e3e4e] text-white placeholder:text-slate-500"
             />
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-transparent"
             >
-              <Icon name="Paperclip" size={18} className="text-slate-400" />
+              <Icon name="Paperclip" size={18} className="text-slate-500" />
             </Button>
           </div>
 
           <Button
             size="icon"
             onClick={handleSendMessage}
-            className="bg-[#2AABEE] hover:bg-[#229ED9] text-white border-0 flex-shrink-0"
+            className="bg-purple-600 hover:bg-purple-700 text-white border-0 flex-shrink-0"
           >
             <Icon name="Send" size={20} />
           </Button>

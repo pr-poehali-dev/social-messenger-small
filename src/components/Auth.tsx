@@ -115,14 +115,14 @@ export default function Auth({ onLogin }: AuthProps) {
 
   return (
     <div className="min-h-screen bg-[#0e1621] flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-white shadow-2xl border-0">
+      <Card className="w-full max-w-md bg-[#1e1e2e] border-[#2e2e3e] shadow-2xl">
         <div className="p-8">
           <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-[#2AABEE] to-[#229ED9] rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
+            <div className="w-20 h-20 bg-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
               <Icon name="Send" size={40} className="text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Tunzok</h1>
-            <p className="text-slate-500">
+            <h1 className="text-3xl font-bold text-white mb-2">Tunzok</h1>
+            <p className="text-slate-400">
               {mode === 'login' ? 'Войдите в аккаунт' : 'Создайте аккаунт'}
             </p>
           </div>
@@ -133,11 +133,11 @@ export default function Auth({ onLogin }: AuthProps) {
                 <div className="flex justify-center mb-6">
                   <div className="relative">
                     <label htmlFor="avatar-upload" className="cursor-pointer">
-                      <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#2AABEE] to-[#229ED9] flex items-center justify-center overflow-hidden border-4 border-white shadow-lg hover:opacity-90 transition-opacity">
+                      <div className="w-24 h-24 rounded-full bg-purple-600/20 flex items-center justify-center overflow-hidden border-4 border-[#1e1e2e] shadow-lg hover:opacity-90 transition-opacity">
                         {avatarPreview ? (
                           <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
                         ) : (
-                          <Icon name="Camera" size={32} className="text-white" />
+                          <Icon name="Camera" size={32} className="text-purple-400" />
                         )}
                       </div>
                     </label>
@@ -148,7 +148,7 @@ export default function Auth({ onLogin }: AuthProps) {
                       onChange={handleImageUpload}
                       className="hidden"
                     />
-                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#2AABEE] text-white text-xs px-3 py-1 rounded-full shadow">
+                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-purple-600 text-white text-xs px-3 py-1 rounded-full shadow">
                       Фото
                     </div>
                   </div>
@@ -156,14 +156,14 @@ export default function Auth({ onLogin }: AuthProps) {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label htmlFor="firstName" className="text-slate-700 font-medium">
+                    <Label htmlFor="firstName" className="text-slate-300 font-medium">
                       Имя
                     </Label>
                     <Input
                       id="firstName"
                       value={formData.firstName}
                       onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                      className={`mt-1 ${errors.firstName ? 'border-red-500' : 'border-slate-200'}`}
+                      className={`mt-1 bg-[#2e2e3e] text-white placeholder:text-slate-500 ${errors.firstName ? 'border-red-500' : 'border-[#3e3e4e]'}`}
                       placeholder="Иван"
                     />
                     {errors.firstName && (
@@ -172,14 +172,14 @@ export default function Auth({ onLogin }: AuthProps) {
                   </div>
 
                   <div>
-                    <Label htmlFor="lastName" className="text-slate-700 font-medium">
+                    <Label htmlFor="lastName" className="text-slate-300 font-medium">
                       Фамилия
                     </Label>
                     <Input
                       id="lastName"
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                      className={`mt-1 ${errors.lastName ? 'border-red-500' : 'border-slate-200'}`}
+                      className={`mt-1 bg-[#2e2e3e] text-white placeholder:text-slate-500 ${errors.lastName ? 'border-red-500' : 'border-[#3e3e4e]'}`}
                       placeholder="Иванов"
                     />
                     {errors.lastName && (
@@ -191,14 +191,14 @@ export default function Auth({ onLogin }: AuthProps) {
             )}
 
             <div>
-              <Label htmlFor="username" className="text-slate-700 font-medium">
+              <Label htmlFor="username" className="text-slate-300 font-medium">
                 Имя пользователя
               </Label>
               <Input
                 id="username"
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                className={`mt-1 ${errors.username ? 'border-red-500' : 'border-slate-200'}`}
+                className={`mt-1 bg-[#2e2e3e] text-white placeholder:text-slate-500 ${errors.username ? 'border-red-500' : 'border-[#3e3e4e]'}`}
                 placeholder="username"
               />
               {errors.username && (
@@ -208,14 +208,14 @@ export default function Auth({ onLogin }: AuthProps) {
 
             {mode === 'register' && (
               <div>
-                <Label htmlFor="bio" className="text-slate-700 font-medium">
+                <Label htmlFor="bio" className="text-slate-300 font-medium">
                   О себе
                 </Label>
                 <Textarea
                   id="bio"
                   value={formData.bio}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  className="mt-1 border-slate-200 resize-none"
+                  className="mt-1 bg-[#2e2e3e] border-[#3e3e4e] text-white placeholder:text-slate-500 resize-none"
                   placeholder="Расскажите о себе..."
                   rows={3}
                 />
@@ -223,7 +223,7 @@ export default function Auth({ onLogin }: AuthProps) {
             )}
 
             <div>
-              <Label htmlFor="password" className="text-slate-700 font-medium">
+              <Label htmlFor="password" className="text-slate-300 font-medium">
                 Пароль
               </Label>
               <Input
@@ -231,7 +231,7 @@ export default function Auth({ onLogin }: AuthProps) {
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className={`mt-1 ${errors.password ? 'border-red-500' : 'border-slate-200'}`}
+                className={`mt-1 bg-[#2e2e3e] text-white placeholder:text-slate-500 ${errors.password ? 'border-red-500' : 'border-[#3e3e4e]'}`}
                 placeholder="••••••••"
               />
               {errors.password && (
@@ -241,7 +241,7 @@ export default function Auth({ onLogin }: AuthProps) {
 
             {mode === 'register' && (
               <div>
-                <Label htmlFor="confirmPassword" className="text-slate-700 font-medium">
+                <Label htmlFor="confirmPassword" className="text-slate-300 font-medium">
                   Подтвердите пароль
                 </Label>
                 <Input
@@ -249,7 +249,7 @@ export default function Auth({ onLogin }: AuthProps) {
                   type="password"
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  className={`mt-1 ${errors.confirmPassword ? 'border-red-500' : 'border-slate-200'}`}
+                  className={`mt-1 bg-[#2e2e3e] text-white placeholder:text-slate-500 ${errors.confirmPassword ? 'border-red-500' : 'border-[#3e3e4e]'}`}
                   placeholder="••••••••"
                 />
                 {errors.confirmPassword && (
@@ -260,7 +260,7 @@ export default function Auth({ onLogin }: AuthProps) {
 
             <Button
               type="submit"
-              className="w-full bg-[#2AABEE] hover:bg-[#229ED9] text-white font-medium py-6 text-base shadow-lg"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-6 text-base shadow-lg"
             >
               {mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
             </Button>
@@ -272,7 +272,7 @@ export default function Auth({ onLogin }: AuthProps) {
                 setMode(mode === 'login' ? 'register' : 'login');
                 setErrors({});
               }}
-              className="text-[#2AABEE] hover:underline text-sm font-medium"
+              className="text-purple-400 hover:text-purple-300 text-sm font-medium"
             >
               {mode === 'login' ? 'Нет аккаунта? Зарегистрируйтесь' : 'Уже есть аккаунт? Войдите'}
             </button>
