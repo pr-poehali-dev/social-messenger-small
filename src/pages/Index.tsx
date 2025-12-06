@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import ChatWindow from '@/components/ChatWindow';
 
 interface Chat {
   id: number;
@@ -30,6 +31,7 @@ export default function Index() {
   const [activeTab, setActiveTab] = useState('chats');
   const [diamonds, setDiamonds] = useState(150);
   const [hasPlusSubscription, setHasPlusSubscription] = useState(false);
+  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
 
   const chats: Chat[] = [
     { id: 1, name: 'Анна Смирнова', lastMessage: 'Встречаемся завтра?', time: '14:32', unread: 2, avatar: 'АС' },
@@ -52,6 +54,16 @@ export default function Index() {
     { amount: 250, price: 279, discount: false },
     { amount: 500, price: 449, discount: true },
   ];
+
+  if (selectedChat) {
+    return (
+      <ChatWindow
+        chatName={selectedChat.name}
+        chatAvatar={selectedChat.avatar}
+        onClose={() => setSelectedChat(null)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
@@ -109,7 +121,11 @@ export default function Index() {
             <ScrollArea className="h-[600px]">
               <div className="space-y-2">
                 {chats.map((chat) => (
-                  <Card key={chat.id} className="p-4 hover:shadow-md transition-all cursor-pointer hover-scale bg-white border-slate-200">
+                  <Card
+                    key={chat.id}
+                    className="p-4 hover:shadow-md transition-all cursor-pointer hover-scale bg-white border-slate-200"
+                    onClick={() => setSelectedChat(chat)}
+                  >
                     <div className="flex items-center gap-4">
                       <Avatar className="w-12 h-12">
                         <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white font-semibold">
@@ -155,7 +171,11 @@ export default function Index() {
                       </AvatarFallback>
                     </Avatar>
                     <h3 className="font-semibold text-slate-900 mb-2">{contact.name}</h3>
-                    <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0">
+                    <Button
+                      size="sm"
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0"
+                      onClick={() => setSelectedChat(contact)}
+                    >
                       <Icon name="MessageCircle" size={16} className="mr-2" />
                       Написать
                     </Button>
