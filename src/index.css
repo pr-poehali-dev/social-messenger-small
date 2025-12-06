@@ -97,5 +97,16 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family:
+      "Rubik",
+      system-ui,
+      -apple-system,
+      sans-serif;
+  }
+}
+
+@layer utilities {
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-[1.02];
   }
 }
