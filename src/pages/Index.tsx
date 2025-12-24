@@ -145,7 +145,9 @@ export default function Index() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0e1621]">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0f1a] via-[#0e1621] to-[#0a0f1a] relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(147,51,234,0.1),transparent_50%),radial-gradient(circle_at_70%_80%,rgba(59,130,246,0.08),transparent_50%)] pointer-events-none"></div>
+      
       {showCreateGroup && (
         <CreateGroup
           onClose={() => setShowCreateGroup(false)}
@@ -157,27 +159,31 @@ export default function Index() {
         <AdminPanel onClose={() => setShowAdminPanel(false)} />
       )}
 
-      <div className="max-w-7xl mx-auto p-4 md:p-6">
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Icon name="Send" size={24} className="text-white" />
+      <div className="max-w-7xl mx-auto p-4 md:p-6 relative z-10">
+        <div className="mb-8 flex items-center justify-between animate-slide-up">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl flex items-center justify-center shadow-xl glow-effect relative">
+              <div className="absolute inset-0 bg-white/20 rounded-2xl blur-sm"></div>
+              <Icon name="Send" size={26} className="text-white relative z-10" />
             </div>
-            <h1 className="text-2xl font-bold text-white">Tunzok</h1>
+            <div>
+              <h1 className="text-3xl font-bold text-white tracking-tight">Tunzok</h1>
+              <p className="text-xs text-slate-400">Современный мессенджер</p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             {isAdmin && (
               <Button
                 onClick={() => setShowAdminPanel(true)}
-                className="bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-500/30"
+                className="glass-effect hover:bg-white/10 text-purple-400 border border-purple-500/30 shadow-lg transition-all hover:shadow-purple-500/20 hover:scale-105"
               >
                 <Icon name="Shield" size={18} className="mr-2" />
-                Админ-панель
+                Админ
               </Button>
             )}
             <Button
               onClick={() => setShowCreateGroup(true)}
-              className="bg-purple-600 hover:bg-purple-700 text-white"
+              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-xl glow-effect transition-all hover:scale-105"
             >
               <Icon name="Plus" size={18} className="mr-2" />
               Создать
@@ -185,78 +191,81 @@ export default function Index() {
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full bg-[#1e1e2e] border-0 shadow-sm mb-6 p-1 h-auto">
-            <TabsTrigger value="chats" className="flex-1 data-[state=active]:bg-purple-600 data-[state=active]:text-white rounded-lg text-slate-400">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full animate-fade-in">
+          <TabsList className="w-full glass-effect border-0 shadow-2xl mb-8 p-1.5 h-auto rounded-2xl">
+            <TabsTrigger value="chats" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-700 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl text-slate-400 transition-all py-3 font-medium hover:text-white">
               <Icon name="MessageSquare" size={18} className="mr-2" />
               Чаты
             </TabsTrigger>
-            <TabsTrigger value="contacts" className="flex-1 data-[state=active]:bg-purple-600 data-[state=active]:text-white rounded-lg text-slate-400">
+            <TabsTrigger value="contacts" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-700 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl text-slate-400 transition-all py-3 font-medium hover:text-white">
               <Icon name="Users" size={18} className="mr-2" />
               Контакты
             </TabsTrigger>
-            <TabsTrigger value="profile" className="flex-1 data-[state=active]:bg-purple-600 data-[state=active]:text-white rounded-lg text-slate-400">
+            <TabsTrigger value="profile" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-700 data-[state=active]:text-white data-[state=active]:shadow-lg rounded-xl text-slate-400 transition-all py-3 font-medium hover:text-white">
               <Icon name="User" size={18} className="mr-2" />
               Профиль
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="chats" className="animate-fade-in">
-            <div className="mb-4">
+          <TabsContent value="chats" className="animate-slide-up">
+            <div className="mb-6">
               <div className="relative">
-                <Icon name="Search" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Icon name="Search" size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                 <Input 
                   placeholder="Поиск чатов..." 
-                  className="pl-10 bg-[#1e1e2e] border-[#2e2e3e] text-white placeholder:text-slate-500"
+                  className="pl-12 py-6 rounded-2xl glass-effect border-white/10 text-white placeholder:text-slate-500 focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all shadow-lg"
                 />
               </div>
             </div>
             <ScrollArea className="h-[600px]">
-              <div className="space-y-2">
-                {chats.map((chat) => (
+              <div className="space-y-3">
+                {chats.map((chat, index) => (
                   <Card
                     key={chat.id}
-                    className="p-4 hover:bg-[#2e2e3e] transition-all cursor-pointer bg-[#1e1e2e] border-[#2e2e3e]"
+                    className="p-5 glass-effect hover:bg-white/10 transition-all duration-300 cursor-pointer border-white/10 hover:border-purple-500/30 hover:shadow-xl hover:shadow-purple-500/10 hover:scale-[1.02] rounded-2xl"
                     onClick={() => setSelectedChat(chat)}
+                    style={{animationDelay: `${index * 50}ms`}}
                   >
                     <div className="flex items-center gap-4">
-                      <Avatar className="w-12 h-12">
-                        <AvatarFallback className={chat.isBot ? 'bg-blue-600/20 text-blue-400 font-semibold text-xl' : 'bg-purple-600/20 text-purple-400 font-semibold'}>
-                          {chat.avatar}
-                        </AvatarFallback>
-                      </Avatar>
+                      <div className="relative">
+                        <Avatar className="w-14 h-14 ring-2 ring-purple-500/20">
+                          <AvatarFallback className={chat.isBot ? 'bg-gradient-to-br from-blue-600/30 to-blue-700/30 text-blue-400 font-semibold text-xl' : 'bg-gradient-to-br from-purple-600/30 to-purple-700/30 text-purple-400 font-semibold text-lg'}>
+                            {chat.avatar}
+                          </AvatarFallback>
+                        </Avatar>
+                        {chat.unread > 0 && (
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-lg glow-effect">
+                            {chat.unread}
+                          </div>
+                        )}
+                      </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <h3 className="font-semibold text-white truncate">{chat.name}</h3>
+                            <h3 className="font-semibold text-white truncate text-base">{chat.name}</h3>
                             {chat.isBot && (
-                              <Badge className="bg-blue-600/20 text-blue-400 border-blue-500/30 text-xs">
+                              <Badge className="bg-gradient-to-r from-blue-600/20 to-blue-700/20 text-blue-400 border-blue-500/30 text-[10px] px-2 py-0.5 rounded-full">
                                 <Icon name="Bot" size={10} className="mr-1" />
                                 Бот
                               </Badge>
                             )}
                             {chat.type === 'group' && (
-                              <Badge className="bg-purple-600/20 text-purple-400 border-purple-500/30 text-xs">
+                              <Badge className="bg-gradient-to-r from-purple-600/20 to-purple-700/20 text-purple-400 border-purple-500/30 text-[10px] px-2 py-0.5 rounded-full">
                                 <Icon name="Users" size={10} className="mr-1" />
                                 Группа
                               </Badge>
                             )}
                             {chat.type === 'channel' && (
-                              <Badge className="bg-blue-600/20 text-blue-400 border-blue-500/30 text-xs">
+                              <Badge className="bg-gradient-to-r from-blue-600/20 to-blue-700/20 text-blue-400 border-blue-500/30 text-[10px] px-2 py-0.5 rounded-full">
                                 <Icon name="Radio" size={10} className="mr-1" />
                                 Канал
                               </Badge>
                             )}
                           </div>
-                          <span className="text-xs text-slate-500">{chat.time}</span>
+                          <span className="text-xs text-slate-500 font-medium">{chat.time}</span>
                         </div>
                         <p className="text-sm text-slate-400 truncate">{chat.lastMessage}</p>
                       </div>
-                      {chat.unread > 0 && (
-                        <Badge className="bg-purple-600 text-white border-0">
-                          {chat.unread}
-                        </Badge>
-                      )}
                     </div>
                   </Card>
                 ))}
@@ -264,22 +273,27 @@ export default function Index() {
             </ScrollArea>
           </TabsContent>
 
-          <TabsContent value="contacts" className="animate-fade-in">
-            <div className="mb-4">
+          <TabsContent value="contacts" className="animate-slide-up">
+            <div className="mb-6">
               <div className="relative">
-                <Icon name="Search" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Icon name="Search" size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                 <Input 
                   placeholder="Поиск контактов..." 
-                  className="pl-10 bg-[#1e1e2e] border-[#2e2e3e] text-white placeholder:text-slate-500"
+                  className="pl-12 py-6 rounded-2xl glass-effect border-white/10 text-white placeholder:text-slate-500 focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all shadow-lg"
                 />
               </div>
             </div>
             <ScrollArea className="h-[600px]">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {chats.filter(c => c.type === 'chat' && !c.isBot).map((contact) => (
-                  <Card key={contact.id} className="p-6 text-center hover:bg-[#2e2e3e] transition-all cursor-pointer bg-[#1e1e2e] border-[#2e2e3e]" onClick={() => setSelectedChat(contact)}>
-                    <Avatar className="w-16 h-16 mx-auto mb-3">
-                      <AvatarFallback className="bg-purple-600/20 text-purple-400 text-xl font-semibold">
+                {chats.filter(c => c.type === 'chat' && !c.isBot).map((contact, index) => (
+                  <Card 
+                    key={contact.id} 
+                    className="p-8 text-center glass-effect hover:bg-white/10 transition-all duration-300 cursor-pointer border-white/10 hover:border-purple-500/30 hover:shadow-xl hover:shadow-purple-500/10 hover:scale-105 rounded-2xl"
+                    onClick={() => setSelectedChat(contact)}
+                    style={{animationDelay: `${index * 50}ms`}}
+                  >
+                    <Avatar className="w-20 h-20 mx-auto mb-4 ring-2 ring-purple-500/20">
+                      <AvatarFallback className="bg-gradient-to-br from-purple-600/30 to-purple-700/30 text-purple-400 text-2xl font-semibold">
                         {contact.avatar}
                       </AvatarFallback>
                     </Avatar>
